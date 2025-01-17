@@ -1,7 +1,7 @@
 ﻿using System.Data.SqlTypes;
 using System.Runtime.InteropServices;
 
-namespace BubbleSort
+namespace BasicSort
 {
     internal class Program
     {
@@ -25,12 +25,16 @@ namespace BubbleSort
             }
             return array;
         }
+        public static int[] SelectionSort(int[] array)
+        {
+
+        }
         static void Main(string[] args)
         {
-            TexTest(BubbleSort);
+            BubbleSortTest(BubbleSort);
         }
 
-        public static void TexTest(Func<int[], int[]> sort)
+        public static void BubbleSortTest(Func<int[], int[]> sort)
         {
             Random randy = new Random();
             for (int i = 0; i < 100; i++)
