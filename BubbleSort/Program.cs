@@ -1,5 +1,6 @@
 ﻿using System.Data.SqlTypes;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization.Formatters;
 
 namespace BasicSort
 {
@@ -39,9 +40,14 @@ namespace BasicSort
             return min;
         }
 
-        public static int FindIndex(int number, int[] array, int startIndex = 0)
+        public static int FindIndex(int number, int[] array, int startIndex = 0, int endIndex = -1)
         {
-            for (int i = startIndex; i < array.Length; i++)
+            if (endIndex == -1)
+            {
+                endIndex = array.Length;
+            }
+
+            for (int i = startIndex; i < endIndex; i++)
             {
                 if (array[i] == number)
                 {
@@ -62,6 +68,25 @@ namespace BasicSort
                 
             }
             return array;
+        }
+
+        public static int[] Swap(int[] array, int endindex, int startindex)
+        {
+            int temp = array[startindex];
+            array[startindex] = array[endindex];
+            array[endindex] = temp;
+            return array;
+        }
+        public static int[] InsertionSort(int[] array)
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                int temp = FindLeast(array, i);
+                for (int j = i - 1; j > 0; j--)
+                {
+                    if(array[j] > temp)
+                }
+            }
         }
         static void Main(string[] args)
         {
