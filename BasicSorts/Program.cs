@@ -6,7 +6,7 @@ namespace BasicSort
 {
     internal class Program
     {
-        public static int[] BubbleSort(int[] array)
+        public static T[] BubbleSort<T>(T[] array) where T : IComparable<T>
         {
             bool abool = true;
             while (abool)
@@ -14,9 +14,9 @@ namespace BasicSort
                 abool = false;
                 for (int i = 0; i < array.Length - 1; i++)
                 {
-                    int current = array[i];
-                    int next = array[i + 1];
-                    if (current > next)
+                    T current = array[i];
+                    T next = array[i + 1];
+                    if (current.CompareTo(next) > 0)
                     {
                         array[i] = next;
                         array[i + 1] = current;
@@ -27,12 +27,12 @@ namespace BasicSort
             return array;
         }
 
-        public static int FindLeast(int[] array, int startIndex = 0)
+        public static T FindLeast<T>(T[] array, int startIndex) where T : IComparable<T> 
         {
-            int min = int.MaxValue;
+            T min = array[startIndex];
             for (int i = startIndex; i < array.Length; i++)
             {
-                if (array[i] < min)
+                if (array[i].CompareTo(min) < 0)
                 {
                     min = array[i];
                 }
@@ -40,7 +40,7 @@ namespace BasicSort
             return min;
         }
 
-        public static int FindIndex(int number, int[] array, int startIndex = 0, int endIndex = -1)
+        public static int FindIndex<T>(T number, T[] array, int startIndex, int endIndex) where T : IComparable<T>
         {
             if (endIndex == -1)
             {
@@ -49,20 +49,20 @@ namespace BasicSort
 
             for (int i = startIndex; i < endIndex; i++)
             {
-                if (array[i] == number)
+                if (array[i].CompareTo(number) == 0)
                 {
                     return i;
                 }
             }
-            return -1;
+            throw new Exception("not in array");
         }
-        public static int[] SelectionSort(int[] array)
+        public static T[] SelectionSort<T>(T[] array) where T : IComparable<T>
         {
             for (int i = 0; i < array.Length; i++)
             {
-                int min = FindLeast(array, i);
-                int temp = array[i];
-                int temp2 = FindIndex(min, array, i);
+                T min = FindLeast(array, i);
+                T temp = array[i];
+                int temp2 = FindIndex(min, array, i, array.Length);
                 array[temp2] = temp;
                 array[i] = min;
                 
@@ -70,39 +70,49 @@ namespace BasicSort
             return array;
         }
 
-        public static int[] Swap(int[] array, int endindex, int startindex)
+        public static T[] Swap<T>(T[] array, int indexa, int indexb) where T : IComparable<T>
         {
-            int temp = array[startindex];
-            array[startindex] = array[endindex];
-            array[endindex] = temp;
+            T temp = array[indexa];
+            array[indexa] = array[indexb];
+            array[indexb] = temp;
             return array;
         }
-        public static int[] InsertionSort(int[] array)
+        public static T[] InsertionSort<T>(T[] array) where T : IComparable<T>
         {
-            for (int i = 0; i < array.Length; i++)
+            for (int i = 0; i < array.Length - 1; i++)
             {
-                int temp = FindLeast(array, i);
-                for (int j = i - 1; j > 0; j--)
+                for(int j = i+1; j > 0; j--)
                 {
-                    if(array[j] > temp)
+                    if(array[j].CompareTo(array[j-1]) < 0)
+                    {
+                        Swap(array, j, j - 1);
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
+            return array;
         }
         static void Main(string[] args)
         {
             SortTest(BubbleSort);
             SortTest(SelectionSort);
+            SortTest(InsertionSort);
+            int[] array = [23, 49, 234, 54, 46, 743, 453];
+            //debugger(SelectionSort, array);
         }
 
-        public static void SortTest(Func<int[], int[]> sort)
+        public static void SortTest(Func<double[], double[]> sort)
         {
             Random randy = new Random();
             for (int i = 0; i < 100; i++)
             {
-                int[] ints = new int[100];
+                double[] ints = new double[100];
                 for (int j = 0; j < 100; j++)
                 {
-                    ints[j] = randy.Next(1000);
+                    ints[j] = randy.NextDouble();
                 }
 
                 sort(ints);
@@ -111,9 +121,17 @@ namespace BasicSort
                 {
                     if (ints[j] > ints[j + 1])
                     {
-                        throw new Exception("you suck lol");
+                        throw new Exception("Sort No Work");
                     }
                 }
+            }
+        }
+        public static void debugger(Func<int[], int[]> sort, int[] array)
+        {
+            array = sort(array);
+            foreach(int var in array)
+            {
+                Console.WriteLine(var);
             }
         }
     }
